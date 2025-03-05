@@ -5,7 +5,7 @@ module.exports =  {
         host: '127.0.0.1',
         user: 'root',
         password: 'Cavalier$393',
-        database: 'pizza',
+        database: 'https://pizza-service.amartin.click',
         connectTimeout: 60000,
       },
       listPerPage: 10,
