@@ -27,7 +27,7 @@ function sendMetricToGrafana(metricName, metricValue, attributes) {
                 sum: {
                   dataPoints: [
                     {
-                      asInt: metricValue,
+                      asDouble: metricValue,
                       timeUnixNano: Date.now() * 1000000,
                       attributes: [],
                     },
@@ -89,8 +89,8 @@ function httpMetrics() {
 }
 
 function systemMetrics() {
-    sendMetricToGrafana('CPU', getCpuUsagePercentage, 'gauge', '%');
-    sendMetricToGrafana('Memory', getMemoryUsagePercentage, 'gauge', '%');
+    sendMetricToGrafana('CPU', getCpuUsagePercentage(), 'gauge', '%');
+    sendMetricToGrafana('Memory', getMemoryUsagePercentage(), 'gauge', '%');
 }
 
 function userMetrics() {
