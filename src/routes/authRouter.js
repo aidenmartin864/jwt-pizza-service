@@ -6,6 +6,7 @@ const { asyncHandler } = require('../endpointHelper.js');
 const { DB, Role } = require('../database/database.js');
 
 const authRouter = express.Router();
+authRouter.use(metrics.track); //added metrics tracking
 
 authRouter.endpoints = [
   {
