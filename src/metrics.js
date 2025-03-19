@@ -67,8 +67,6 @@ function sendMetricToGrafana(metricName, metricValue, attributes) {
     });
 }
 
-module.exports = { track };
-
 function getCpuUsagePercentage() {
   const cpuUsage = os.loadavg()[0] / os.cpus().length;
   return cpuUsage.toFixed(2) * 100;
@@ -118,3 +116,5 @@ function sendMetricsPeriodically(period) {
       }
     }, period);
 }
+
+module.exports = { track };

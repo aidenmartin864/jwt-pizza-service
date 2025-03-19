@@ -67,7 +67,7 @@ authRouter.authenticateToken = (req, res, next) => {
 
 // register
 authRouter.post(
-  '/', 
+  '/',
   metrics.track('post'),
   asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
