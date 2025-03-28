@@ -6,11 +6,14 @@ sendMetricsPeriodically(1000);
 const requests = {};
 
 function track(endpoint) {
+    console.log("track" + endpoint);
   return (req, res, next) => {
     requests[endpoint] = (requests[endpoint] || 0) + 1;
     next();
   };
 }
+
+module.exports = { track };
 
 function sendMetricToGrafana(metricName, metricValue, attributes) {
   attributes = { ...attributes, source: config.metrics.source };
@@ -116,5 +119,3 @@ function sendMetricsPeriodically(period) {
       }
     }, period);
 }
-
-module.exports = { track };

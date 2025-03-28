@@ -1,12 +1,12 @@
 const express = require('express');
-const metrics = require('../metrics') //metrics
 const config = require('../config.js');
 const { Role, DB } = require('../database/database.js');
 const { authRouter } = require('./authRouter.js');
 const { asyncHandler, StatusCodeError } = require('../endpointHelper.js');
+const Logger = require('pizza-logger')
 
+const logger = new Logger(config);
 const orderRouter = express.Router();
-orderRouter.use(metrics.track); //added metrics tracking
 
 orderRouter.endpoints = [
   {
@@ -45,7 +45,6 @@ orderRouter.endpoints = [
 // getMenu
 orderRouter.get(
   '/menu',
-  metrics.track('get'),
   asyncHandler(async (req, res) => {
     res.send(await DB.getMenu());
   })
@@ -54,7 +53,6 @@ orderRouter.get(
 // addMenuItem
 orderRouter.put(
   '/menu',
-  metrics.track('put'),
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
     if (!req.user.isRole(Role.Admin)) {
@@ -70,7 +68,6 @@ orderRouter.put(
 // getOrders
 orderRouter.get(
   '/',
-  metrics.track('get'),
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
     res.json(await DB.getOrders(req.user, req.query.page));
@@ -80,11 +77,12 @@ orderRouter.get(
 // createOrder
 orderRouter.post(
   '/',
-  metrics.track('post'),
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
     const orderReq = req.body;
     const order = await DB.addDinerOrder(req.user, orderReq);
+    const orderInfo = { diner: { id: req.user.id, name: req.user.name, email: req.user.email }, order };
+    logger.factoryLogger(orderInfo);
     const r = await fetch(`${config.factory.url}/api/order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', authorization: `Bearer ${config.factory.apiKey}` },

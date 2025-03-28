@@ -4,4 +4,4 @@
 /src/config.js
 coverage
 dist
-grafana-key.txt
+grafanatoken.txt

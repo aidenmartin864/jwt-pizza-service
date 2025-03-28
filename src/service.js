@@ -1,15 +1,17 @@
 const express = require('express');
-const metrics = require('./metrics') //metrics
+const metrics = require('./metrics');
 const { authRouter, setAuthUser } = require('./routes/authRouter.js');
 const orderRouter = require('./routes/orderRouter.js');
 const franchiseRouter = require('./routes/franchiseRouter.js');
 const version = require('./version.json');
 const config = require('./config.js');
+const Logger = require('pizza-logger')
+
+const logger = new Logger(config);
 
 const app = express();
 app.use(express.json());
 app.use(setAuthUser);
-app.use(metrics.track); //added metrics tracking
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -19,8 +21,9 @@ app.use((req, res, next) => {
 });
 
 const apiRouter = express.Router();
-apiRouter.use(metrics.track);
 app.use('/api', apiRouter);
+apiRouter.use(metrics.track());
+apiRouter.use(logger.httpLogger)
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/order', orderRouter);
 apiRouter.use('/franchise', franchiseRouter);
@@ -33,7 +36,7 @@ apiRouter.use('/docs', (req, res) => {
   });
 });
 
-app.get('/', metrics.track('get'), (req, res) => { //Added metrics
+app.get('/', (req, res) => {
   res.json({
     message: 'welcome to JWT Pizza',
     version: version.version,
