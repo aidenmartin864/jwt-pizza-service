@@ -5,10 +5,22 @@ sendMetricsPeriodically(1000);
 
 const requests = {};
 
-function track(endpoint) {
-    console.log("track" + endpoint);
+// function track(endpointLabel = 'unknown') {
+//   return (req, res, next) => {
+//     requests[endpointLabel] = (requests[endpointLabel] || 0) + 1;
+//     console.log(`[Metrics] ${endpointLabel}: ${requests[endpointLabel]} request(s)`);
+//     next();
+//   };
+// }
+
+function track() {
   return (req, res, next) => {
-    requests[endpoint] = (requests[endpoint] || 0) + 1;
+    const method = req.method;
+    const path = req.baseUrl + req.path; // includes route mounting path
+    const key = `${method} ${path}`;
+
+    requests[key] = (requests[key] || 0) + 1;
+    console.log(`[Metrics] ${key}: ${requests[key]} request(s)`);
     next();
   };
 }

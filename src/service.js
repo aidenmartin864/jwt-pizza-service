@@ -5,7 +5,7 @@ const orderRouter = require('./routes/orderRouter.js');
 const franchiseRouter = require('./routes/franchiseRouter.js');
 const version = require('./version.json');
 const config = require('./config.js');
-const Logger = require('pizza-logger')
+const Logger = require('pizza-logger');
 
 const logger = new Logger(config);
 
